@@ -23,10 +23,10 @@ class Weather:
         year = date[0]
         month = calendar.month_name[int(date[1])]
         day = date[2]
+        temperature = self.data['current_weather']['temperature']
+        windspeed = self.data['current_weather']['windspeed']
 
-        weathercode = int(self.data['current_weather']['weathercode'])
-
-        def getWeatherCode(weathercode):
+        def getWeatherInterpretation(weathercode):
             match weathercode:
                 case 0: 
                     return 'clear sky'
@@ -84,24 +84,46 @@ class Weather:
                     return 'thunderstorm with slight hail'
                 case 99:
                     return 'thunderstorm with heavy hail'
-                    
 
-        # Code	Description
-        
-        
-        
-        
-       
-       
-        
-        
-        
-       
-        
-        
-        
-        
-        return f'Today is {month} {day}, {year}. {getWeatherCode(0)}'
+        weather_interpretation = getWeatherInterpretation(int(self.data['current_weather']['weathercode']))
+            
+        def windDirection(degrees):
+            match degrees:
+                case degrees if degrees >= 350 and degrees <= 360 or degrees <= 19:
+                    return 'North (N)'
+                case degrees if degrees >= 20 and degrees <= 39:
+                    return 'North-northeast (N/NE)'
+                case degrees if degrees >= 40 and degrees <= 59:
+                    return 'Northeast (NE)'
+                case degrees if degrees >= 60 and degrees <= 79:
+                    return 'East-northeast (E/NE)'
+                case degrees if degrees >= 80 and degrees <= 109:
+                    return 'East (E)'
+                case degrees if degrees >= 110 and degrees <= 129:
+                    return 'East-southeast (E/SE)'
+                case degrees if degrees >= 130 and degrees <= 149:
+                    return 'Southeast (SE)'
+                case degrees if degrees >= 150 and degrees <= 169:
+                    return 'South-southeast (S/SE)'
+                case degrees if degrees >= 170 and degrees <= 199:
+                    return 'South (S)'
+                case degrees if degrees >= 200 and degrees <= 219:
+                    return 'South-southwest (S/SW)'
+                case degrees if degrees >= 220 and degrees <= 239:
+                    return 'Southwest (SW)'
+                case degrees if degrees >= 240 and degrees <= 259:
+                    return 'West-southwest (W/SW)'
+                case degrees if degrees >= 260 and degrees <= 289:
+                    return 'West (W)'
+                case degrees if degrees >= 290 and degrees <= 309:
+                    return 'West-northwest (W/NW)'
+                case degrees if degrees >= 310 and degrees <= 329:
+                    return 'Northwest (NW)'
+                case degrees if degrees >= 330 and degrees <= 349:
+                    return 'North-northwest (N/NW)'
+
+
+        return f'Today is {month} {day}, {year}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F\nCurrent windspeed is {windspeed} Mph'
         
 w = Weather(40.3, -75.1)
 
