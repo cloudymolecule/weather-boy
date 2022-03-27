@@ -16,12 +16,6 @@ class Weather:
         return response
 
     def current(self):
-        # date, time = self.data['current_weather']['time'].split('T')
-        # date = date.split('-')
-        # year = date[0]
-        # month = calendar.month_name[int(date[1])]
-        # day = date[2]
-
         date = self.__formatTime__('d', self.data['current_weather']['time'])
         time = self.__formatTime__('t', self.data['current_weather']['time'])
         year = date[0]
@@ -39,14 +33,26 @@ class Weather:
         
     def week(self):
         w_weathercodes = self.data['daily']['weathercode']
-        w_times = self.data['daily']['time']
+        w_dates = self.data['daily']['time']
         w_sunrises = self.data['daily']['sunrise']
-        w_min_temps = self.data['daily']['temperature_2m_min']
         w_sunsets = self.data['daily']['sunset']
+        w_min_temps = self.data['daily']['temperature_2m_min']
         w_max_temps = self.data['daily']['temperature_2m_max']
         
         all_week = ["Here's your forecast for the week:"]
+        
         for num in range(0, 7):
+            date = self.__formatTime__('d_only', w_dates[num])
+            year = date[0]
+            month = calendar.month_name[int(date[1])]
+            day = date[2]
+
+            sunrise = self.__formatTime__('t', w_sunrises[num])
+            sunset = self.__formatTime__('t', w_sunsets[num])
+            min_temp = w_min_temps[num]
+            max_temp = w_max_temps[num]
+            weather_interpretation = self.__getWeatherInterpretation__(int(w_weathercodes[num]))            
+
             all_week.append('')
 
 
@@ -54,10 +60,13 @@ class Weather:
         
         '''
     def __formatTime__(self, type, time):
-        date_and_time = self.data['current_weather']['time'].split('T')
+        if type == 'd_only':
+            return time.split('-') # in this case it's date actually, hence the 'd_only'
         if type == 'd':
+            date_and_time = self.data['current_weather']['time'].split('T')
             return date_and_time[0].split('-')
         elif type == 't':
+            date_and_time = self.data['current_weather']['time'].split('T')
             return date_and_time[1]
         else:
             return 'Impossible, there is an awful error'
