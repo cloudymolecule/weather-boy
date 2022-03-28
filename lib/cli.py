@@ -2,11 +2,12 @@ import os
 from lib.weather import Weather
 from lib.space import Space
 from lib.geolocator import Geolocator
+from colorama import Fore, Back, Style
 
 class CommandLineInterface():
     def __init__(self):
         self.running = True
-        self.space = Space()
+        self.space = Space() # Space class instance
     
     # clears screen when called
     def _clear_screen(self):
@@ -18,11 +19,11 @@ class CommandLineInterface():
         self.greeting()
 
         while self.running:
-            location = input('What location do you want to check the weather for?: ')
+            location = input(Fore.YELLOW + Style.BRIGHT + 'What location do you want to check the weather for?: ' + Style.RESET_ALL)
             g = Geolocator(location) # Geolocator class instance
             while g.stat != 200:
-                print('Location not found, please try again.')
-                location = input('What location do you want to check the weather for?: ')
+                print(Fore.RED + Style.BRIGHT + 'Location not found, please try again.' + Style.RESET_ALL)
+                location = input(Fore.YELLOW + Style.BRIGHT + 'What location do you want to check the weather for?: ' + Style.RESET_ALL)
                 g = Geolocator(location) # Another instance in case input didn't match a place
 
             w = Weather(latitude= g.coordinates['lat'], longitude= g.coordinates['lng'])
@@ -52,11 +53,11 @@ class CommandLineInterface():
 
     # friendly greeting
     def greeting(self):
-        print('Howdy there friend!\n')
+        print(Fore.WHITE + Back.YELLOW + Style.BRIGHT + 'Howdy there friend!\n' + Style.RESET_ALL)
 
     # user makes a choice
     def menu(self):
-        menu_str = 'Type "C" to get the current weather forecast.\nType "W" to get the forecast for the week.\nType "H" to see the hourly forecast.\nType "O" to see another location.\nType "A" to see how many astronauts are currently in space.\nType "Q" to quit.'
+        menu_str = Fore.CYAN + 'Type "C" to get the current weather forecast\nType "W" to get the forecast for the week\nType "H" to see the hourly forecast\nType "O" to see another location\nType "A" to see how many astronauts are currently in space\nType "Q" to quit\n' + Style.RESET_ALL
         print(menu_str)
         inp = input('What will it be?: ').upper()
         print(inp)
@@ -69,7 +70,7 @@ class CommandLineInterface():
 
     # bye!
     def bye(self):
-        print('Goodbye! See you again soon!')
+        print(Fore.WHITE + Back.YELLOW + Style.BRIGHT + 'Goodbye! See you again soon!' + Style.RESET_ALL)
 
     # displays info aboout selected location
     def location_display(self, coordinates, flag, data):
@@ -78,4 +79,4 @@ class CommandLineInterface():
         lat = coordinates['lat']
         lng = coordinates['lng']
 
-        print(f'Current coordinates for {formatted_loc} {flag}\nlocated in the continent of {continent}\nlatitude: {lat}\tlongitude: {lng}\n')
+        print(f'Current coordinates for {formatted_loc} {flag}\nlocated in the continent of {continent}\n'+ Fore.WHITE + Back.YELLOW + Style.BRIGHT +f'latitude: {lat}\tlongitude: {lng}\n' + Style.RESET_ALL)

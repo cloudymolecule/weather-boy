@@ -1,5 +1,6 @@
 import requests
 from time import sleep
+from colorama import Fore, Back, Style
 
 class Space:
     def __init__(self):
@@ -23,7 +24,7 @@ class Space:
         legends = [f'There are currently {self.astronauts_count} astronauts in space, here are the names of these brave humans:\n']
 
         for num in range(0, self.astronauts_count):
-            astro = f"{self.astronauts[num]['name']} is currently in the |{self.astronauts[num]['craft']}| spacecraft.\n"
+            astro = Fore.GREEN + Style.BRIGHT + f"{self.astronauts[num]['name']}" + Style.RESET_ALL +f" is currently in the |{self.astronauts[num]['craft']}| spacecraft.\n"
             legends.append(astro)
         
         for num in legends:

@@ -2,13 +2,13 @@ import requests
 import calendar
 from time import sleep
 from datetime import datetime
+from colorama import Fore, Back, Style
 
 class Weather:
     def __init__(self, latitude=40.71, longitude=-74.01): # defaults to NYC, just in case something goes wrong
         self.coordinates = {latitude, longitude}
         self.url = f'https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=temperature_2m,apparent_temperature,precipitation,windspeed_10m,winddirection_10m,windgusts_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York'
         self.data = self._get_weather()
-        
         # this adjusts the 'sleep' and the way it displays
         self.display_speed = 0.01
 
@@ -35,7 +35,7 @@ class Weather:
 
         wind_direction = self._get_wind_direction(windspeed)
 
-        print (f'Today is {month} {day}, {year} and the time is {local_time}. This forecast was prepared at {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convert_from_f_to_c(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElevation at location is {self._convert_meters_to_feet(elevation)} feet ({elevation} meters) above sea level.\n')
+        print(Fore.GREEN + Style.BRIGHT + f'Today is {month} {day}, {year} and the time is {local_time}.' + Style.RESET_ALL + f' This forecast was prepared at {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convert_from_f_to_c(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElevation at location is {self._convert_meters_to_feet(elevation)} feet ({elevation} meters) above sea level.\n')
         
     # weekly forecast for location
     def week(self):
@@ -60,7 +60,7 @@ class Weather:
             max_temp = w_max_temps[num]
             weather_interpretation = self._get_weather_interpretation(int(w_weathercodes[num]))            
 
-            forecast = f'On {month} {day}, {year} the weather condition will be {weather_interpretation}\nsunrise will be at {sunrise} and sunset will be at {sunset}\nthe minimum temperature will be {min_temp}°F ({self._convert_from_f_to_c(min_temp)}°C),\nand the maximum temperature will be {max_temp}°F ({self._convert_from_f_to_c(max_temp)}°C)\n'
+            forecast = Fore.GREEN + Style.BRIGHT + f'On {month} {day}, {year}' + Style.RESET_ALL +f' the weather condition will be {weather_interpretation}\nsunrise will be at {sunrise} and sunset will be at {sunset}\nthe minimum temperature will be {min_temp}°F ({self._convert_from_f_to_c(min_temp)}°C),\nand the maximum temperature will be {max_temp}°F ({self._convert_from_f_to_c(max_temp)}°C)\n' 
             all_week.append(forecast)
 
 
@@ -88,10 +88,10 @@ class Weather:
             day = date[2]
             wind_direction = self._get_wind_direction(h_wind_dir[num])
 
-            forecast = f'Hourly forecast for {month} {day}, {year} at {time}:\nTemperature {h_temp[num]}°F ({self._convert_from_f_to_c(h_temp[num])}°C)\tApparent temperature {h_appt_temp[num]}°F ({self._convert_from_f_to_c(h_appt_temp[num])}°C)\nWindspeed {h_winds[num]} Mph\tWind direction {h_wind_dir[num]}° {wind_direction}\nWind gusts {h_gusts[num]} Mph\tPrecipitation {h_precipitation[num]}"\n'
+            forecast = Fore.GREEN + Style.BRIGHT + f'Hourly forecast for {month} {day}, {year} at {time}:\n' + Style.RESET_ALL + f'Temperature {h_temp[num]}°F ({self._convert_from_f_to_c(h_temp[num])}°C)\tApparent temperature {h_appt_temp[num]}°F ({self._convert_from_f_to_c(h_appt_temp[num])}°C)\nWindspeed {h_winds[num]} Mph\tWind direction {h_wind_dir[num]}° {wind_direction}\nWind gusts {h_gusts[num]} Mph\tPrecipitation {h_precipitation[num]}"\n'
             
             all_hours.append(forecast)
-            
+
         for hour in all_hours:
             sleep(self.display_speed)
             print(hour)
