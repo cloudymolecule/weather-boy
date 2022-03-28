@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime
 
 class Weather:
-    def __init__(self, latitude=40.71, longitude=-74.01): # defaults to NYC
+    def __init__(self, latitude=40.71, longitude=-74.01): # defaults to NYC, just in case something goes wrong
         self.coordinates = {latitude, longitude}
         self.url = f'https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=temperature_2m,apparent_temperature,precipitation,windspeed_10m,winddirection_10m,windgusts_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York'
         self.data = self._get_weather()
@@ -12,17 +12,19 @@ class Weather:
         # this adjusts the 'sleep' and the way it displays
         self.display_speed = 0.01
 
+    # makes request to remote api
     def _get_weather(self):
         request = requests.get(self.url)
         response = request.json()
         return response
 
+    # current weather forecast for location
     def current(self):
         date = self._format_time('d', self.data['current_weather']['time'])
         time = self._format_time('t', self.data['current_weather']['time'])
         local_time = datetime.now().strftime('%H:%M')
         year = date[0]
-        month = calendar.month_name[int(date[1])]
+        month = calendar.month_name[int(date[1])] # matches a number to the text version of a month, ie: 03 = March
         day = date[2]
         temperature = self.data['current_weather']['temperature']
         windspeed = int(self.data['current_weather']['windspeed'])
@@ -35,6 +37,7 @@ class Weather:
 
         print (f'Today is {month} {day}, {year} and the time is {local_time}. This forecast was prepared at {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convert_from_f_to_c(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElevation at location is {self._convert_meters_to_feet(elevation)} feet ({elevation} meters) above sea level.\n')
         
+    # weekly forecast for location
     def week(self):
         w_weathercodes = self.data['daily']['weathercode']
         w_dates = self.data['daily']['time']
@@ -48,7 +51,7 @@ class Weather:
         for num in range(0, 7):
             date = self._format_time('d_only', w_dates[num])
             year = date[0]
-            month = calendar.month_name[int(date[1])]
+            month = calendar.month_name[int(date[1])] # matches a number to the text version of a month, ie: 03 = March
             day = date[2]
 
             sunrise = self._format_time('t', w_sunrises[num])
@@ -65,6 +68,7 @@ class Weather:
             sleep(self.display_speed)
             print(day) 
 
+    # hourly forecast for location
     def hourly(self):
         h_temp = self.data['hourly']['temperature_2m']
         h_wind_dir = self.data['hourly']['winddirection_10m']
@@ -80,7 +84,7 @@ class Weather:
             date = self._format_time('d', h_time[num])
             time = self._format_time('t', h_time[num])
             year = date[0]
-            month = calendar.month_name[int(date[1])]
+            month = calendar.month_name[int(date[1])] # matches a number to the text version of a month, ie: 03 = March
             day = date[2]
             wind_direction = self._get_wind_direction(h_wind_dir[num])
 
@@ -92,6 +96,7 @@ class Weather:
             sleep(self.display_speed)
             print(hour)
 
+    # separates the string containing both the date and time into their own separate things
     def _format_time(self, type, time):
         if type == 'd_only':
             return time.split('-') # in this case it's date actually, hence the 'd_only'
@@ -104,11 +109,15 @@ class Weather:
         else:
             return 'Impossible, there is an awful error'
 
+    # converts meters to feet
     def _convert_meters_to_feet(self, meters):
         return round((meters* 3.28084), 2)
+    
+    # converts from farenheit to celcius
     def _convert_from_f_to_c(self, temp):
         return round((temp - 32) * (5/9), 1)
 
+    # matches weathercode to it's interpretation
     def _get_weather_interpretation(self, weathercode):
         match weathercode:
             case 0: 
@@ -168,6 +177,7 @@ class Weather:
             case 99:
                 return 'thunderstorm with heavy hail'
     
+    # matches a degree to the direction the wind blows
     def _get_wind_direction(self, degrees):
         match degrees:
             case degrees if degrees >= 350 and degrees <= 360 or degrees <= 19:

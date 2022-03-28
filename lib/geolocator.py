@@ -6,6 +6,7 @@ class Geolocator():
         self.query = query
         self.data = self._get_data()
 
+    # gets api data
     def _get_data(self):
         geocoder = OpenCageGeocode(self.api)
         data = geocoder.geocode(self.query)
@@ -19,6 +20,7 @@ class Geolocator():
             self.location_data = data[0]['components']
             return data[0]
     
+    # opens file containing api key, you can always remove this function anf just paste your actual key, but why?!
     def _open_file(self, file):
         f = open(file, 'r')
         return f.read()

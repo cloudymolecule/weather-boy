@@ -11,11 +11,13 @@ class Space:
          # this adjusts the 'sleep' and the way it displays
         self.display_speed = 0.01
 
+    # Connects to remote api 
     def _getAstronauts(self, url):
         request = requests.get(self.url)
         response = request.json()
         return response
 
+    # displays astronauts
     def displayAstronauts(self):
         
         legends = [f'There are currently {self.astronauts_count} astronauts in space, here are the names of these brave humans:\n']
