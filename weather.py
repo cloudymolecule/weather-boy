@@ -11,7 +11,7 @@ class Weather:
         self.data = self.__getWeather__()
         
         # this adjusts the 'sleep' and the way it displays
-        self.display_speed = 0.1
+        self.display_speed = 0.05
 
     def __getWeather__(self):
         request = requests.get(self.url)
@@ -27,12 +27,13 @@ class Weather:
         temperature = self.data['current_weather']['temperature']
         windspeed = int(self.data['current_weather']['windspeed'])
         wind_degrees = self.data['current_weather']['winddirection']
+        elevation = self.data['elevation']
 
         weather_interpretation = self.__getWeatherInterpretation__(int(self.data['current_weather']['weathercode']))
 
         wind_direction = self.__getWindDirection__(windspeed)
 
-        print (f'Today is {month} {day}, {year} and the time is {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self.__convertFromFToC__(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees} degree, {wind_direction} direction as the crow flies.')
+        print (f'Today is {month} {day}, {year} and the time is {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self.__convertFromFToC__(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies. Elavation at location is {self.__convertMetersToFeet__(elevation)} feet ({elevation} meters) above sea level.')
         
     def week(self):
         w_weathercodes = self.data['daily']['weathercode']
@@ -82,11 +83,14 @@ class Weather:
             year = date[0]
             month = calendar.month_name[int(date[1])]
             day = date[2]
+            wind_direction = self.__getWindDirection__(h_wind_dir[num])
 
 
-            forecast = f'On {month} {day}, {year} at {time} the weather condition will be'
+            forecast = f'On {month} {day}, {year} at {time} the weather condition will be:\nTemperature {h_temp[num]}°F ({self.__convertFromFToC__(h_temp[num])}°C)\nApparent temperature {h_appt_temp[num]}°F ({self.__convertFromFToC__(h_appt_temp[num])}°C)\nWindspeed {h_winds[num]}\nWind direction {h_wind_dir[num]}° {wind_direction}\nWind gusts {h_gusts[num]} Mph\nPrecipitation {h_precipitation[num]}"'
             all_hours.append(forecast)
             
+# Current windspeed is {windspeed} Mph with a {wind_degrees} degree, {wind_direction} direction as the crow flies.
+
         for hour in all_hours:
             sleep(self.display_speed)
             print(hour)
@@ -104,6 +108,9 @@ class Weather:
         else:
             return 'Impossible, there is an awful error'
 
+
+    def __convertMetersToFeet__(self, meters):
+        return round((meters* 3.28084), 2)
     def __convertFromFToC__(self, temp):
         return round((temp - 32) * (5/9), 1)
 
