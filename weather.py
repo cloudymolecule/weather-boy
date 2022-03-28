@@ -1,15 +1,18 @@
 import os
-import json
 import requests
 import calendar
+from time import sleep
 
 class Weather:
 
-    def __init__(self, latitude=40.3, longitude=-75.1):
+    def __init__(self, latitude=40.71, longitude=-74.01): # defaults to NYC
         self.coordinates = {latitude, longitude}
         self.url = f'https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=temperature_2m,apparent_temperature,precipitation,windspeed_10m,winddirection_10m,windgusts_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York'
         self.data = self.__getWeather__()
-    
+        
+        # this adjusts the 'sleep' and the way it displays
+        self.display_speed = 0.1
+
     def __getWeather__(self):
         request = requests.get(self.url)
         response = request.json()
@@ -29,7 +32,7 @@ class Weather:
 
         wind_direction = self.__getWindDirection__(windspeed)
 
-        return f'Today is {month} {day}, {year} and the time is {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F\nCurrent windspeed is {windspeed} Mph with a {wind_degrees} degree, {wind_direction} direction as the crow flies.'
+        print (f'Today is {month} {day}, {year} and the time is {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self.__convertFromFToC__(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees} degree, {wind_direction} direction as the crow flies.')
         
     def week(self):
         w_weathercodes = self.data['daily']['weathercode']
@@ -53,23 +56,56 @@ class Weather:
             max_temp = w_max_temps[num]
             weather_interpretation = self.__getWeatherInterpretation__(int(w_weathercodes[num]))            
 
-            all_week.append('')
+            forecast = f'On {month} {day}, {year} the weather condition will be {weather_interpretation}\nsunrise will be at {sunrise} and sunset will be at {sunset}\nthe minimum temperature will be {min_temp}°F ({self.__convertFromFToC__(min_temp)}°C),\nand the maximum temperature will be {max_temp}°F ({self.__convertFromFToC__(max_temp)}°C)\n'
+            all_week.append(forecast)
 
 
-        return '''
-        
-        '''
+        for day in all_week:
+            sleep(self.display_speed)
+            print(day) 
+
+
+    def hourly(self):
+        h_temp = self.data['hourly']['temperature_2m']
+        h_wind_dir = self.data['hourly']['winddirection_10m']
+        h_precipitation = self.data['hourly']['precipitation']
+        h_time = self.data['hourly']['time']
+        h_winds = self.data['hourly']['windspeed_10m']
+        h_appt_temp = self.data['hourly']['apparent_temperature']
+        h_gusts = self.data['hourly']['windgusts_10m']
+
+        all_hours = ["Here's your hourly forecast"]
+
+        for num in range(0,len(h_time)):
+            date = self.__formatTime__('d', h_time[num])
+            time = self.__formatTime__('t', h_time[num])
+            year = date[0]
+            month = calendar.month_name[int(date[1])]
+            day = date[2]
+
+
+            forecast = f'On {month} {day}, {year} at {time} the weather condition will be'
+            all_hours.append(forecast)
+            
+        for hour in all_hours:
+            sleep(self.display_speed)
+            print(hour)
+            pass
+
     def __formatTime__(self, type, time):
         if type == 'd_only':
             return time.split('-') # in this case it's date actually, hence the 'd_only'
         if type == 'd':
-            date_and_time = self.data['current_weather']['time'].split('T')
+            date_and_time = time.split('T')
             return date_and_time[0].split('-')
         elif type == 't':
-            date_and_time = self.data['current_weather']['time'].split('T')
+            date_and_time = time.split('T')
             return date_and_time[1]
         else:
             return 'Impossible, there is an awful error'
+
+    def __convertFromFToC__(self, temp):
+        return round((temp - 32) * (5/9), 1)
 
     def __getWeatherInterpretation__(self, weathercode):
         match weathercode:
@@ -124,11 +160,12 @@ class Weather:
             case 86:
                 return 'heavy snow showers'
             case 95: 
-                return 'moderate thunderstorm'
+                return 'moderate thunderstorms'
             case 96: 
                 return 'thunderstorm with slight hail'
             case 99:
                 return 'thunderstorm with heavy hail'
+    
     def __getWindDirection__(self, degrees):
         match degrees:
             case degrees if degrees >= 350 and degrees <= 360 or degrees <= 19:
@@ -166,5 +203,9 @@ class Weather:
 
 w = Weather(40.3, -75.1)
 
-# print(w.current())
-print(w.week())
+os.system('clear')
+w.current()
+print('')
+w.week()
+print('')
+w.hourly()
