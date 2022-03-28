@@ -1,12 +1,10 @@
 from lib.cli import CommandLineInterface
 
 c = CommandLineInterface()
-c.run_program()
 
-# from lib.geolocator import Geolocator
-# from pprint import pprint
+instance = c.run_program()
+while instance == 'Another':
+    c = CommandLineInterface()
+    instance = c.run_program()
 
-# g = Geolocator()
-# res = g.find_coordinates('doylestown, pa')
-# pprint(g.location_data)
 

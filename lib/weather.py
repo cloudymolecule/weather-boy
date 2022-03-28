@@ -33,7 +33,7 @@ class Weather:
 
         wind_direction = self._get_wind_direction(windspeed)
 
-        print (f'Today is {month} {day}, {year} and the time is {local_time}. This forecast was prepared at {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convert_from_f_to_c(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElavation at location is {self._convert_meters_to_feet(elevation)} feet ({elevation} meters) above sea level.\n')
+        print (f'Today is {month} {day}, {year} and the time is {local_time}. This forecast was prepared at {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convert_from_f_to_c(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElevation at location is {self._convert_meters_to_feet(elevation)} feet ({elevation} meters) above sea level.\n')
         
     def week(self):
         w_weathercodes = self.data['daily']['weathercode']
