@@ -5,14 +5,14 @@ from time import sleep
 class Space:
     def __init__(self):
         self.url = 'http://api.open-notify.org/astros.json'
-        self.data = self.__getAstronauts__(self.url)
+        self.data = self._getAstronauts(self.url)
         self.astronauts = self.data['people']
         self.astronauts_count = len(self.data['people'])
     
          # this adjusts the 'sleep' and the way it displays
         self.display_speed = 0.05
 
-    def __getAstronauts__(self, url):
+    def _getAstronauts(self, url):
         request = requests.get(self.url)
         response = request.json()
         return response

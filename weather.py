@@ -7,19 +7,19 @@ class Weather:
     def __init__(self, latitude=40.71, longitude=-74.01): # defaults to NYC
         self.coordinates = {latitude, longitude}
         self.url = f'https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=temperature_2m,apparent_temperature,precipitation,windspeed_10m,winddirection_10m,windgusts_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York'
-        self.data = self.__getWeather__()
+        self.data = self._getWeather()
         
         # this adjusts the 'sleep' and the way it displays
         self.display_speed = 0.05
 
-    def __getWeather__(self):
+    def _getWeather(self):
         request = requests.get(self.url)
         response = request.json()
         return response
 
     def current(self):
-        date = self.__formatTime__('d', self.data['current_weather']['time'])
-        time = self.__formatTime__('t', self.data['current_weather']['time'])
+        date = self._formatTime('d', self.data['current_weather']['time'])
+        time = self._formatTime('t', self.data['current_weather']['time'])
         year = date[0]
         month = calendar.month_name[int(date[1])]
         day = date[2]
@@ -28,11 +28,11 @@ class Weather:
         wind_degrees = self.data['current_weather']['winddirection']
         elevation = self.data['elevation']
 
-        weather_interpretation = self.__getWeatherInterpretation__(int(self.data['current_weather']['weathercode']))
+        weather_interpretation = self._getWeatherInterpretation(int(self.data['current_weather']['weathercode']))
 
-        wind_direction = self.__getWindDirection__(windspeed)
+        wind_direction = self._getWindDirection(windspeed)
 
-        print (f'Today is {month} {day}, {year} and the time is {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self.__convertFromFToC__(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies. Elavation at location is {self.__convertMetersToFeet__(elevation)} feet ({elevation} meters) above sea level.')
+        print (f'Today is {month} {day}, {year} and the time is {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convertFromFToC(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElavation at location is {self._convertMetersToFeet(elevation)} feet ({elevation} meters) above sea level.')
         
     def week(self):
         w_weathercodes = self.data['daily']['weathercode']
@@ -45,18 +45,18 @@ class Weather:
         all_week = ["Here's your forecast for the week:"]
         
         for num in range(0, 7):
-            date = self.__formatTime__('d_only', w_dates[num])
+            date = self._formatTime('d_only', w_dates[num])
             year = date[0]
             month = calendar.month_name[int(date[1])]
             day = date[2]
 
-            sunrise = self.__formatTime__('t', w_sunrises[num])
-            sunset = self.__formatTime__('t', w_sunsets[num])
+            sunrise = self._formatTime('t', w_sunrises[num])
+            sunset = self._formatTime('t', w_sunsets[num])
             min_temp = w_min_temps[num]
             max_temp = w_max_temps[num]
-            weather_interpretation = self.__getWeatherInterpretation__(int(w_weathercodes[num]))            
+            weather_interpretation = self._getWeatherInterpretation(int(w_weathercodes[num]))            
 
-            forecast = f'On {month} {day}, {year} the weather condition will be {weather_interpretation}\nsunrise will be at {sunrise} and sunset will be at {sunset}\nthe minimum temperature will be {min_temp}°F ({self.__convertFromFToC__(min_temp)}°C),\nand the maximum temperature will be {max_temp}°F ({self.__convertFromFToC__(max_temp)}°C)\n'
+            forecast = f'On {month} {day}, {year} the weather condition will be {weather_interpretation}\nsunrise will be at {sunrise} and sunset will be at {sunset}\nthe minimum temperature will be {min_temp}°F ({self._convertFromFToC(min_temp)}°C),\nand the maximum temperature will be {max_temp}°F ({self._convertFromFToC(max_temp)}°C)\n'
             all_week.append(forecast)
 
 
@@ -77,14 +77,14 @@ class Weather:
         all_hours = []
 
         for num in range(0,len(h_time)):
-            date = self.__formatTime__('d', h_time[num])
-            time = self.__formatTime__('t', h_time[num])
+            date = self._formatTime('d', h_time[num])
+            time = self._formatTime('t', h_time[num])
             year = date[0]
             month = calendar.month_name[int(date[1])]
             day = date[2]
-            wind_direction = self.__getWindDirection__(h_wind_dir[num])
+            wind_direction = self._getWindDirection(h_wind_dir[num])
 
-            forecast = f'Hourly forecast for {month} {day}, {year} at {time}:\nTemperature {h_temp[num]}°F ({self.__convertFromFToC__(h_temp[num])}°C)\tApparent temperature {h_appt_temp[num]}°F ({self.__convertFromFToC__(h_appt_temp[num])}°C)\nWindspeed {h_winds[num]} Mph\tWind direction {h_wind_dir[num]}° {wind_direction}\nWind gusts {h_gusts[num]} Mph\tPrecipitation {h_precipitation[num]}"\n'
+            forecast = f'Hourly forecast for {month} {day}, {year} at {time}:\nTemperature {h_temp[num]}°F ({self._convertFromFToC(h_temp[num])}°C)\tApparent temperature {h_appt_temp[num]}°F ({self._convertFromFToC(h_appt_temp[num])}°C)\nWindspeed {h_winds[num]} Mph\tWind direction {h_wind_dir[num]}° {wind_direction}\nWind gusts {h_gusts[num]} Mph\tPrecipitation {h_precipitation[num]}"\n'
             
             all_hours.append(forecast)
             
@@ -92,7 +92,7 @@ class Weather:
             sleep(self.display_speed)
             print(hour)
 
-    def __formatTime__(self, type, time):
+    def _formatTime(self, type, time):
         if type == 'd_only':
             return time.split('-') # in this case it's date actually, hence the 'd_only'
         if type == 'd':
@@ -105,12 +105,12 @@ class Weather:
             return 'Impossible, there is an awful error'
 
 
-    def __convertMetersToFeet__(self, meters):
+    def _convertMetersToFeet(self, meters):
         return round((meters* 3.28084), 2)
-    def __convertFromFToC__(self, temp):
+    def _convertFromFToC(self, temp):
         return round((temp - 32) * (5/9), 1)
 
-    def __getWeatherInterpretation__(self, weathercode):
+    def _getWeatherInterpretation(self, weathercode):
         match weathercode:
             case 0: 
                 return 'clear sky'
@@ -169,7 +169,7 @@ class Weather:
             case 99:
                 return 'thunderstorm with heavy hail'
     
-    def __getWindDirection__(self, degrees):
+    def _getWindDirection(self, degrees):
         match degrees:
             case degrees if degrees >= 350 and degrees <= 360 or degrees <= 19:
                 return 'North (N)'
