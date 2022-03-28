@@ -1,6 +1,7 @@
 import requests
 import calendar
 from time import sleep
+from datetime import datetime
 
 class Weather:
 
@@ -10,7 +11,7 @@ class Weather:
         self.data = self._getWeather()
         
         # this adjusts the 'sleep' and the way it displays
-        self.display_speed = 0.05
+        self.display_speed = 0.01
 
     def _getWeather(self):
         request = requests.get(self.url)
@@ -20,6 +21,7 @@ class Weather:
     def current(self):
         date = self._formatTime('d', self.data['current_weather']['time'])
         time = self._formatTime('t', self.data['current_weather']['time'])
+        local_time = datetime.now().strftime('%H:%M')
         year = date[0]
         month = calendar.month_name[int(date[1])]
         day = date[2]
@@ -32,7 +34,7 @@ class Weather:
 
         wind_direction = self._getWindDirection(windspeed)
 
-        print (f'Today is {month} {day}, {year} and the time is {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convertFromFToC(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElavation at location is {self._convertMetersToFeet(elevation)} feet ({elevation} meters) above sea level.')
+        print (f'Today is {month} {day}, {year} and the time is {local_time}. This forecast was prepared at {time}.\nThe current weather condition is {weather_interpretation} with a temperature of {temperature}°F ({self._convertFromFToC(temperature)}°C)\nCurrent windspeed is {windspeed} Mph with a {wind_degrees}°, {wind_direction} direction as the crow flies.\nElavation at location is {self._convertMetersToFeet(elevation)} feet ({elevation} meters) above sea level.\n')
         
     def week(self):
         w_weathercodes = self.data['daily']['weathercode']
@@ -42,7 +44,7 @@ class Weather:
         w_min_temps = self.data['daily']['temperature_2m_min']
         w_max_temps = self.data['daily']['temperature_2m_max']
         
-        all_week = ["Here's your forecast for the week:"]
+        all_week = ["Here's your forecast for the week:\n"]
         
         for num in range(0, 7):
             date = self._formatTime('d_only', w_dates[num])
@@ -74,7 +76,7 @@ class Weather:
         h_appt_temp = self.data['hourly']['apparent_temperature']
         h_gusts = self.data['hourly']['windgusts_10m']
 
-        all_hours = []
+        all_hours = ['Hourly forecast for the next 7 days:\n']
 
         for num in range(0,len(h_time)):
             date = self._formatTime('d', h_time[num])

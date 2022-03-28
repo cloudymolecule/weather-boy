@@ -7,6 +7,9 @@ w = Weather(40.3, -75.1)
 s = Space()
 
 os.system('clear')
+
+print('Howdy there friend!\n')
+
 w.current()
 print('')
 w.week()

@@ -10,7 +10,7 @@ class Space:
         self.astronauts_count = len(self.data['people'])
     
          # this adjusts the 'sleep' and the way it displays
-        self.display_speed = 0.05
+        self.display_speed = 0.01
 
     def _getAstronauts(self, url):
         request = requests.get(self.url)
@@ -23,7 +23,7 @@ class Space:
 
         for num in range(0, self.astronauts_count):
             
-            astro = f"{self.astronauts[num]['name']} currently in the |{self.astronauts[num]['craft']}| spacecraft.\n"
+            astro = f"{self.astronauts[num]['name']} is currently in the |{self.astronauts[num]['craft']}| spacecraft.\n"
             
             legends.append(astro)
         
