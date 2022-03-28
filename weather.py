@@ -1,4 +1,3 @@
-import os
 import requests
 import calendar
 from time import sleep
@@ -75,7 +74,7 @@ class Weather:
         h_appt_temp = self.data['hourly']['apparent_temperature']
         h_gusts = self.data['hourly']['windgusts_10m']
 
-        all_hours = ["Here's your hourly forecast"]
+        all_hours = []
 
         for num in range(0,len(h_time)):
             date = self.__formatTime__('d', h_time[num])
@@ -85,16 +84,13 @@ class Weather:
             day = date[2]
             wind_direction = self.__getWindDirection__(h_wind_dir[num])
 
-
-            forecast = f'On {month} {day}, {year} at {time} the weather condition will be:\nTemperature {h_temp[num]}°F ({self.__convertFromFToC__(h_temp[num])}°C)\nApparent temperature {h_appt_temp[num]}°F ({self.__convertFromFToC__(h_appt_temp[num])}°C)\nWindspeed {h_winds[num]}\nWind direction {h_wind_dir[num]}° {wind_direction}\nWind gusts {h_gusts[num]} Mph\nPrecipitation {h_precipitation[num]}"'
+            forecast = f'Hourly forecast for {month} {day}, {year} at {time}:\nTemperature {h_temp[num]}°F ({self.__convertFromFToC__(h_temp[num])}°C)\tApparent temperature {h_appt_temp[num]}°F ({self.__convertFromFToC__(h_appt_temp[num])}°C)\nWindspeed {h_winds[num]} Mph\tWind direction {h_wind_dir[num]}° {wind_direction}\nWind gusts {h_gusts[num]} Mph\tPrecipitation {h_precipitation[num]}"\n'
+            
             all_hours.append(forecast)
             
-# Current windspeed is {windspeed} Mph with a {wind_degrees} degree, {wind_direction} direction as the crow flies.
-
         for hour in all_hours:
             sleep(self.display_speed)
             print(hour)
-            pass
 
     def __formatTime__(self, type, time):
         if type == 'd_only':
@@ -208,11 +204,3 @@ class Weather:
             case degrees if degrees >= 330 and degrees <= 349:
                 return 'North-northwest (N/NW)'
 
-w = Weather(40.3, -75.1)
-
-os.system('clear')
-w.current()
-print('')
-w.week()
-print('')
-w.hourly()
