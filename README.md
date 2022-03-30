@@ -18,6 +18,8 @@ pip3 install colorama<br />
 pip3 install opencage<br />
 pip3 install requests<br />
 
+for the Opencage API, you'll need an API Key from them but don't worry, it's free; just place it in a file called **api_key.txt** in the root directory and everything should be peachy. 
+
 ## How to use
 
 <p>From the weather-boy directory type:</p> 
