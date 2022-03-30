@@ -53,7 +53,7 @@ class CommandLineInterface():
 
     # friendly greeting
     def greeting(self):
-        print(Fore.WHITE + Back.YELLOW + Style.BRIGHT + 'Howdy there friend!\n' + Style.RESET_ALL)
+        print(Fore.WHITE + Back.YELLOW + Style.BRIGHT + 'Howdy there friend! Welcome to Weather Boy!\n' + Style.RESET_ALL)
 
     # user makes a choice
     def menu(self):
@@ -63,7 +63,7 @@ class CommandLineInterface():
         print(inp)
         while inp not in ['C', 'W', 'H', 'O', 'A', 'Q']:
             self._clear_screen()
-            print('Incorrect, please try again.')
+            print(Fore.RED + Style.BRIGHT + 'Incorrect, please try again.' + Style.RESET_ALL)
             print(menu_str)
             inp = input('What will it be?: ').upper()
         return inp
