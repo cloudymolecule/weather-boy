@@ -119,97 +119,95 @@ class Weather:
 
     # matches weathercode to it's interpretation
     def _get_weather_interpretation(self, weathercode):
-        match weathercode:
-            case 0: 
-                return 'clear sky'
-            case 1: 
-                return 'mainly clear'
-            case 2:
-                return 'partly cloudy'
-            case 3:
-                return 'overcast'
-            case 45: 
-                return 'fog'
-            case 48: 
-                return 'depositing rime fog'
-            case 51: 
-                return 'light drizzle'
-            case 53:
-                return 'moderate drizzle'
-            case 55: 
-                return 'dense drizzle'
-            case 56:  
-                return 'light intensity freezing drizzle'
-            case 57:
-                return 'dense intensity freezing drizzle'
-            case 61:  
-                return 'slight intensity rain'
-            case 63:
-                return 'moderate intesity rain'
-            case 65:
-                return 'heavy intensity rain'
-            case 66: 
-                return 'light intensity freezing rain'
-            case 67:
-                return 'heavy intensity freezing rain'
-            case 71: 
-                return 'slight intensity snow fall'
-            case 73:
-                return 'moderate intensity snow fall'
-            case 75:
-                return 'heavy intensity snow fall'
-            case 77: 
-                return 'snow grains'
-            case 80: 
-                return 'slight rain showers'
-            case 81:
-                return 'moderate rain showers'
-            case 82:
-                return 'violent rain showers'
-            case 85: 
-                return 'slight snow showers'
-            case 86:
-                return 'heavy snow showers'
-            case 95: 
-                return 'moderate thunderstorms'
-            case 96: 
-                return 'thunderstorm with slight hail'
-            case 99:
-                return 'thunderstorm with heavy hail'
+        if weathercode == 0:
+            return 'clear sky'
+        elif weathercode == 1: 
+            return 'mainly clear'
+        elif weathercode == 2:
+            return 'partly cloudy'
+        elif weathercode == 3:
+            return 'overcast'
+        elif weathercode == 45: 
+            return 'fog'
+        elif weathercode == 48: 
+            return 'depositing rime fog'
+        elif weathercode == 51: 
+            return 'light drizzle'
+        elif weathercode == 53:
+            return 'moderate drizzle'
+        elif weathercode == 55: 
+            return 'dense drizzle'
+        elif weathercode == 56:  
+            return 'light intensity freezing drizzle'
+        elif weathercode == 57:
+            return 'dense intensity freezing drizzle'
+        elif weathercode == 61:  
+            return 'slight intensity rain'
+        elif weathercode == 63:
+            return 'moderate intesity rain'
+        elif weathercode == 65:
+            return 'heavy intensity rain'
+        elif weathercode == 66: 
+            return 'light intensity freezing rain'
+        elif weathercode == 67:
+            return 'heavy intensity freezing rain'
+        elif weathercode == 71: 
+            return 'slight intensity snow fall'
+        elif weathercode == 73:
+            return 'moderate intensity snow fall'
+        elif weathercode == 75:
+            return 'heavy intensity snow fall'
+        elif weathercode == 77: 
+            return 'snow grains'
+        elif weathercode == 80: 
+            return 'slight rain showers'
+        elif weathercode == 81:
+            return 'moderate rain showers'
+        elif weathercode == 82:
+            return 'violent rain showers'
+        elif weathercode == 85: 
+            return 'slight snow showers'
+        elif weathercode == 86:
+            return 'heavy snow showers'
+        elif weathercode == 95: 
+            return 'moderate thunderstorms'
+        elif weathercode == 96: 
+            return 'thunderstorm with slight hail'
+        elif weathercode == 99:
+            return 'thunderstorm with heavy hail'
     
     # matches a degree to the direction the wind blows
     def _get_wind_direction(self, degrees):
-        match degrees:
-            case degrees if degrees >= 350 and degrees <= 360 or degrees <= 19:
-                return 'North (N)'
-            case degrees if degrees >= 20 and degrees <= 39:
-                return 'North-northeast (N/NE)'
-            case degrees if degrees >= 40 and degrees <= 59:
-                return 'Northeast (NE)'
-            case degrees if degrees >= 60 and degrees <= 79:
-                return 'East-northeast (E/NE)'
-            case degrees if degrees >= 80 and degrees <= 109:
-                return 'East (E)'
-            case degrees if degrees >= 110 and degrees <= 129:
-                return 'East-southeast (E/SE)'
-            case degrees if degrees >= 130 and degrees <= 149:
-                return 'Southeast (SE)'
-            case degrees if degrees >= 150 and degrees <= 169:
-                return 'South-southeast (S/SE)'
-            case degrees if degrees >= 170 and degrees <= 199:
-                return 'South (S)'
-            case degrees if degrees >= 200 and degrees <= 219:
-                return 'South-southwest (S/SW)'
-            case degrees if degrees >= 220 and degrees <= 239:
-                return 'Southwest (SW)'
-            case degrees if degrees >= 240 and degrees <= 259:
-                return 'West-southwest (W/SW)'
-            case degrees if degrees >= 260 and degrees <= 289:
-                return 'West (W)'
-            case degrees if degrees >= 290 and degrees <= 309:
-                return 'West-northwest (W/NW)'
-            case degrees if degrees >= 310 and degrees <= 329:
-                return 'Northwest (NW)'
-            case degrees if degrees >= 330 and degrees <= 349:
-                return 'North-northwest (N/NW)'
+        if degrees >= 350 and degrees <= 360 or degrees <= 19:
+            return 'North (N)'
+        elif degrees >= 20 and degrees <= 39:
+            return 'North-northeast (N/NE)'
+        elif degrees >= 40 and degrees <= 59:
+            return 'Northeast (NE)'
+        elif degrees >= 60 and degrees <= 79:
+            return 'East-northeast (E/NE)'
+        elif degrees >= 80 and degrees <= 109:
+            return 'East (E)'
+        elif degrees >= 110 and degrees <= 129:
+            return 'East-southeast (E/SE)'
+        elif degrees >= 130 and degrees <= 149:
+            return 'Southeast (SE)'
+        elif degrees >= 150 and degrees <= 169:
+            return 'South-southeast (S/SE)'
+        elif degrees >= 170 and degrees <= 199:
+            return 'South (S)'
+        elif degrees >= 200 and degrees <= 219:
+            return 'South-southwest (S/SW)'
+        elif degrees >= 220 and degrees <= 239:
+            return 'Southwest (SW)'
+        elif degrees >= 240 and degrees <= 259:
+            return 'West-southwest (W/SW)'
+        elif degrees >= 260 and degrees <= 289:
+            return 'West (W)'
+        elif degrees >= 290 and degrees <= 309:
+            return 'West-northwest (W/NW)'
+        elif degrees >= 310 and degrees <= 329:
+            return 'Northwest (NW)'
+        elif degrees >= 330 and degrees <= 349:
+            return 'North-northwest (N/NW)'
 
